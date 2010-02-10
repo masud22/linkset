@@ -12,7 +12,7 @@ This way LinkSet was born.
 LinkSet is a little "nobody knows, nobody cares" library that utilizes Java 5 features to provide a simle to use mechanism of listeners that doesn't require anonymous classes.
 
 
-= Features of LinkSet=
+= Features of LinkSet =
 
   * Simple to use (no listener interfaces required, no special build steps needed).
   * Easy to learn (only a few intuitive classes to use).
