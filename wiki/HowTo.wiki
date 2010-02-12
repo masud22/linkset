@@ -49,7 +49,7 @@ public class ListenerProvider {
 
 = Listener handler =
 
-This code shows how to implement a class that provedes methods that listen to events.
+This code shows how to implement a class that provides methods that listen to events.
 
 {{{
 package com.mycompany.project1;
