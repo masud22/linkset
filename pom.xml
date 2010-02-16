@@ -4,7 +4,7 @@
 	<groupId>org.linkset</groupId>
 	<artifactId>linkset</artifactId>
 	<name>LinkSet Library</name>
-	<version>1.0-beta</version>
+	<version>1.0.1-beta</version>
 
 	<build>
 		<plugins>

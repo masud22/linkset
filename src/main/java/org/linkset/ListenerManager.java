@@ -26,7 +26,8 @@ package org.linkset;
  * @author Lukasz Bownik (lukasz.bownik@gmail.com)
  ******************************************************************************/
 public interface ListenerManager {
- /***************************************************************************
+
+    /***************************************************************************
      * Adds a listener to this set.
      *
      * @param target
@@ -38,7 +39,8 @@ public interface ListenerManager {
      * @throws NullPointerException
      *             id methodId == null or target == null
      * @throws IllegalArgumentException
-     *             if methodId is empty
+     *             if methodId is empty or method argument types are not
+     * conformat to the specified ones
      **************************************************************************/
     public void add(final Object target, final String methodId);
     /***************************************************************************
