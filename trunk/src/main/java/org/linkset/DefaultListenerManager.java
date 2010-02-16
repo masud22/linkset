@@ -31,12 +31,33 @@ import java.util.ArrayList;
 public final class DefaultListenerManager implements ListenerManager {
 
     /***************************************************************************
+     * A default constructor. This construcotr is equivalnet to DefaultListenerManager(null)
+     * @see DefaultListenerManager#DefaultListenerManager(java.lang.Class<?>[]) 
+     **************************************************************************/
+    public DefaultListenerManager() {
+
+        this((Class<?>[]) null);
+    }
+    /***************************************************************************
+     * A construtor
+     * @param parameterTypes the array of parameter types of event handler methods,
+     * if null then the parameter types are not checked for consistency
+     **************************************************************************/
+    public DefaultListenerManager(final Class<?>... parameterTypes) {
+
+        this.parameterTypes = parameterTypes;
+    }
+    /***************************************************************************
      * @see ListenerManager#add(java.lang.Object, java.lang.String) 
      **************************************************************************/
     public void add(final Object target, final String methodId) {
 
         final MethodPointer pointer = new MethodPointer(target, methodId);
         if (!this.pointers.contains(pointer)) {
+
+            if (this.parameterTypes != null) {
+                pointer.ensureParameterTypes(this.parameterTypes);
+            }
             this.pointers.add(pointer);
         }
     }
@@ -116,4 +137,5 @@ public final class DefaultListenerManager implements ListenerManager {
      *
      **************************************************************************/
     private final ArrayList<MethodPointer> pointers = new ArrayList<MethodPointer>();
+    private final Class<?>[] parameterTypes;
 }

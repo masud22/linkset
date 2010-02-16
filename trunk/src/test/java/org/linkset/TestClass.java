@@ -178,5 +178,21 @@ public class TestClass {
     /***************************************************************************
      *
      **************************************************************************/
+    @Test
+    public void test_ensureParameterTypes() throws Exception {
+
+        final DefaultListenerManager set = new DefaultListenerManager(String.class, Boolean.class);
+        final HandlerTestClass1 handler1 = new HandlerTestClass1();
+
+        try {
+            set.add(handler1.getClass(), "staticParameterMethod");
+            Assert.fail("Parameters not verified.");
+        } catch (final IllegalArgumentException e) {
+            Assert.assertEquals("Nonconformant parameter types.", e.getMessage());
+        }
+    }
+    /***************************************************************************
+     *
+     **************************************************************************/
     private DefaultListenerManager listenerSet;
 }

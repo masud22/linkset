@@ -23,6 +23,7 @@ package org.linkset;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
 /*******************************************************************************
  * The pointer to a listener
@@ -147,6 +148,18 @@ final public class MethodPointer {
         }
         // handler not found
         throw new IllegalArgumentException(methodId + " not found in " + cls);
+    }
+    /***************************************************************************
+     * ensures that method parameters are conformant to the specified ones.
+     * Throws exception otherwise.
+     * @param parameterTypes the array of parameter types of event handler methods
+     **************************************************************************/
+    void ensureParameterTypes(final Class<?>[] parameterTypes) {
+
+        if (!Arrays.equals(parameterTypes,
+                this.method.getParameterTypes())) {
+            throw new IllegalArgumentException("Nonconformant parameter types.");
+        }
     }
     /***************************************************************************
      *
