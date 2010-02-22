@@ -32,139 +32,156 @@ import java.util.Arrays;
  ******************************************************************************/
 final public class MethodPointer {
 
-    /***************************************************************************
-     * Contructor
+	/***************************************************************************
+	 * Contructor
+	 * 
+	 * @param methodId
+	 *            an id of a handler method
+	 * @throws NullPointerException
+	 *             id methodId == null or target == null
+	 * @throws IllegalArgumentException
+	 *             if methodId is empty
+	 **************************************************************************/
+	public MethodPointer(final Object target, final String methodId) {
+
+		if (target == null) {
+			throw new NullPointerException("Null target");
+		}
+
+		this.target = target;
+
+		if (methodId == null) {
+			throw new NullPointerException("Null methodId");
+		}
+		this.methodId = methodId.trim();
+
+		if (this.methodId.isEmpty()) {
+			throw new IllegalArgumentException("Empty mehotdId.");
+		}
+
+		if (this.target instanceof Class<?>) {
+			this.method = getMethod((Class<?>) target, methodId);
+			if (!Modifier.isStatic(this.method.getModifiers())) {
+				throw new IllegalArgumentException(
+						"Non-static method not allowed");
+			}
+		} else {
+			this.method = getMethod(target.getClass(), methodId);
+			if (Modifier.isStatic(this.method.getModifiers())) {
+				throw new IllegalArgumentException("Static method not allowed");
+			}
+		}
+	}
+
+	/***************************************************************************
+	 * @see Object#toString()
+	 **************************************************************************/
+	@Override
+	public String toString() {
+
+		return super.toString() + " ; " + this.methodId;
+	}
+
+	/***************************************************************************
+	 * @see Object#hashCode()
+	 **************************************************************************/
+	@Override
+	public int hashCode() {
+
+		return 17 * this.target.hashCode() + this.method.hashCode();
+	}
+
+	/***************************************************************************
+	 * @see Object#equals(Object)
+	 **************************************************************************/
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (obj != null) {
+			if (obj.getClass().equals(this.getClass())) {
+				final MethodPointer other = (MethodPointer) obj;
+				// use identity not equality
+				return this.target == other.target
+						&& this.method.equals(other.method);
+			}
+		}
+		return false;
+	}
+
+	/***************************************************************************
+	 * Exerutes a method pointed by this pointer
+	 * 
+	 * @param args
+	 *            method arguments
+	 * @return value returned by a called method or null
+	 * @throws ExceptionInInitializerError
+	 *             if the initialization provoked by this method fails.
+	 * @throws InvocationTargetException
+	 *             if the underlying method throws an exception.
+	 **************************************************************************/
+	public Object invoke(final Object... args) throws InvocationTargetException,
+			ExceptionInInitializerError {
+
+		try {
+			return this.method.invoke(this.target, args);
+		} catch (final IllegalAccessException e) {
+			// should never happen
+			throw new RuntimeException(e);
+		} catch (final IllegalArgumentException e) {
+			// should never happen
+			throw new RuntimeException(e);
+		}
+	}
+
+	/***************************************************************************
+	 * This method is equivalent to invoke((Object[])null);
+	 * 
+	 * @see MethodPointer#invoke(java.lang.Object[])
+	 **************************************************************************/
+	public Object invoke() throws InvocationTargetException,
+			ExceptionInInitializerError {
+
+		return invoke((Object[]) null);
+	}
+
+	/***************************************************************************
+	 * Returns a method
+	 * 
+	 * @param cls
+	 **************************************************************************/
+	private static Method getMethod(final Class<?> cls, final String methodId) {
+
+		for (final Method method : cls.getDeclaredMethods()) {
+
+			final HandlerMethod handler = method
+					.getAnnotation(HandlerMethod.class);
+			if (handler != null && handler.id().equals(methodId)) {
+				method.setAccessible(true);
+				return method;
+			}
+		}
+		// handler not found
+		throw new IllegalArgumentException(methodId + " not found in " + cls);
+	}
+
+	/***************************************************************************
+	 * ensures that method parameters are conformant to the specified ones.
+	 * Throws exception otherwise.
+	 * 
+	 * @param parameterTypes
+	 *            the array of parameter types of event handler methods
+	 **************************************************************************/
+	void ensureParameterTypes(final Class<?>[] parameterTypes) {
+
+		if (!Arrays.equals(parameterTypes, this.method.getParameterTypes())) {
+			throw new IllegalArgumentException("Nonconformant parameter types.");
+		}
+	}
+
+	/***************************************************************************
      *
-     * @param methodId
-     *            an id of a handler method
-     * @throws NullPointerException
-     *             id methodId == null or target == null
-     * @throws IllegalArgumentException
-     *             if methodId is empty
      **************************************************************************/
-    public MethodPointer(final Object target, final String methodId) {
-
-        if (target == null) {
-            throw new NullPointerException("Null target");
-        }
-
-        this.target = target;
-
-        if (methodId == null) {
-            throw new NullPointerException("Null methodId");
-        }
-        this.methodId = methodId.trim();
-
-        if (this.methodId.isEmpty()) {
-            throw new IllegalArgumentException("Empty mehotdId.");
-        }
-
-        if (this.target instanceof Class<?>) {
-            this.method = getMethod((Class<?>) target, methodId);
-            if (!Modifier.isStatic(this.method.getModifiers())) {
-                throw new IllegalArgumentException("Non-static method not allowed");
-            }
-        } else {
-            this.method = getMethod(target.getClass(), methodId);
-            if (Modifier.isStatic(this.method.getModifiers())) {
-                throw new IllegalArgumentException("Static method not allowed");
-            }
-        }
-    }
-    /***************************************************************************
-     * @see Object#toString()
-     **************************************************************************/
-    @Override
-    public String toString() {
-
-        return super.toString() + " ; " + this.methodId;
-    }
-    /***************************************************************************
-     * @see Object#hashCode()
-     **************************************************************************/
-    @Override
-    public int hashCode() {
-
-        return 17 * this.target.hashCode() + this.method.hashCode();
-    }
-    /***************************************************************************
-     * @see Object#equals(Object)
-     **************************************************************************/
-    @Override
-    public boolean equals(final Object obj) {
-
-        if (obj.getClass().equals(this.getClass())) {
-            final MethodPointer other = (MethodPointer) obj;
-            // use identity not equality
-            return this.target == other.target && this.method.equals(other.method);
-        }
-        return false;
-    }
-    /***************************************************************************
-     * Exerutes a method pointed by this pointer
-     *
-     * @param args
-     *            method arguments
-     * @return value returned by a called method or null
-     * @throws ExceptionInInitializerError  if the initialization provoked by this method fails.
-     * @throws InvocationTargetException if the underlying method throws an exception.
-     **************************************************************************/
-    public Object invoke(final Object[] args) throws InvocationTargetException,
-            ExceptionInInitializerError {
-
-        try {
-            return this.method.invoke(this.target, args);
-        } catch (final IllegalAccessException e) {
-            // should never happen
-            throw new RuntimeException(e);
-        } catch (final IllegalArgumentException e) {
-            // should never happen
-            throw new RuntimeException(e);
-        }
-    }
-    /***************************************************************************
-     * This method is equivalent to invoke((Object[])null);
-     * @see MethodPointer#invoke(java.lang.Object[]) 
-     **************************************************************************/
-    public Object invoke() throws InvocationTargetException,
-            ExceptionInInitializerError {
-
-        return invoke((Object[]) null);
-    }
-    /***************************************************************************
-     * Returns a method
-     *
-     * @param cls
-     **************************************************************************/
-    private static Method getMethod(final Class<?> cls, final String methodId) {
-
-        for (final Method method : cls.getDeclaredMethods()) {
-
-            final HandlerMethod handler = method.getAnnotation(HandlerMethod.class);
-            if (handler != null && handler.id().equals(methodId)) {
-                method.setAccessible(true);
-                return method;
-            }
-        }
-        // handler not found
-        throw new IllegalArgumentException(methodId + " not found in " + cls);
-    }
-    /***************************************************************************
-     * ensures that method parameters are conformant to the specified ones.
-     * Throws exception otherwise.
-     * @param parameterTypes the array of parameter types of event handler methods
-     **************************************************************************/
-    void ensureParameterTypes(final Class<?>[] parameterTypes) {
-
-        if (!Arrays.equals(parameterTypes,
-                this.method.getParameterTypes())) {
-            throw new IllegalArgumentException("Nonconformant parameter types.");
-        }
-    }
-    /***************************************************************************
-     *
-     **************************************************************************/
-    private final Method method;
-    final Object target;
-    private final String methodId;
+	private final Method method;
+	final Object target;
+	private final String methodId;
 }
