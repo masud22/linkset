@@ -29,79 +29,109 @@ import org.linkset.*;
  ******************************************************************************/
 public final class HandlerTestClass1 {
 
-    /***************************************************************************
+	/***************************************************************************
      *
      **************************************************************************/
-    @HandlerMethod(id = "method1")
-    private void method1() {
+	@HandlerMethod(id = "method1")
+	private void method1() {
 
-        System.out.println("Method1 invoked.");
-        this.method1Invoked = true;
-    }
-    /***************************************************************************
-     *
-     **************************************************************************/
-    @HandlerMethod(id = "method12")
-    private void method12() {
+		System.out.println("Method1 invoked.");
+		this.method1Invoked = true;
+	}
 
-        System.out.println("Method1 invoked.");
-        this.method12Invoked = true;
-    }
-    /***************************************************************************
+	/***************************************************************************
      *
      **************************************************************************/
-    @HandlerMethod(id = "returnValueMethod")
-    private String returnValueMethod() {
+	@HandlerMethod(id = "method12")
+	private void method12() {
 
-        return "123";
-    }
-    /***************************************************************************
-     *
-     **************************************************************************/
-    @HandlerMethod(id = "parameterMethod")
-    private void parameterMethod(final String param1, final int param2) {
+		System.out.println("Method1 invoked.");
+		this.method12Invoked = true;
+	}
 
-        System.out.println("parameterMethod invoked.");
-        this.parameter1 = param1;
-        this.parameter2 = param2;
-    }
-    /***************************************************************************
+	/***************************************************************************
      *
      **************************************************************************/
-    @HandlerMethod(id = "staticParameterMethod")
-    private static void staticParameterMethod(final String param1, final int param2) {
+	@HandlerMethod(id = "returnValueMethod")
+	private String returnValueMethod() {
 
-        System.out.println("parameterMethod invoked.");
-        staticParameter1 = param1;
-        staticParameter2 = param2;
-    }
-    /***************************************************************************
-     *
-     **************************************************************************/
-    @HandlerMethod(id = "staticMethod1")
-    private static void staticMethod1() {
+		return "123";
+	}
 
-        System.out.println("staticMethod1 invoked.");
-        staticMethod1Invoked = true;
-    }
-    /***************************************************************************
+	/***************************************************************************
      *
      **************************************************************************/
-    @HandlerMethod(id = "staticMethod12")
-    private static void staticMethod12() {
+	@HandlerMethod(id = "parameterMethod")
+	private void parameterMethod(final String param1, final int param2) {
 
-        System.out.println("staticMethod1 invoked.");
-        staticMethod12Invoked = true;
-    }
-    /***************************************************************************
+		System.out.println("parameterMethod invoked.");
+		this.parameter1 = param1;
+		this.parameter2 = param2;
+	}
+
+	/***************************************************************************
+    *
+    **************************************************************************/
+	@HandlerMethod(id = "eventMethod")
+	private void eventMethod(final Event event) {
+
+		System.out.println("eventMethod invoked.");
+		this.eventInvoked = true;
+	}
+
+	/***************************************************************************
+   *
+   **************************************************************************/
+	@HandlerMethod(id = "event2Method")
+	private void event2Method(final Event2 event) {
+
+		System.out.println("event2Method invoked.");
+		this.event2Invoked = true;
+	}
+
+	/***************************************************************************
      *
      **************************************************************************/
-    public boolean method1Invoked = false;
-    public boolean method12Invoked = false;
-    public static boolean staticMethod1Invoked = false;
-    public static boolean staticMethod12Invoked = false;
-    public String parameter1 = null;
-    public int parameter2 = 0;
-    public static String staticParameter1 = null;
-    public static int staticParameter2 = 0;
+	@HandlerMethod(id = "staticParameterMethod")
+	private static void staticParameterMethod(final String param1,
+			final int param2) {
+
+		System.out.println("parameterMethod invoked.");
+		staticParameter1 = param1;
+		staticParameter2 = param2;
+	}
+
+	/***************************************************************************
+     *
+     **************************************************************************/
+	@HandlerMethod(id = "staticMethod1")
+	private static void staticMethod1() {
+
+		System.out.println("staticMethod1 invoked.");
+		staticMethod1Invoked = true;
+	}
+
+	/***************************************************************************
+     *
+     **************************************************************************/
+	@HandlerMethod(id = "staticMethod12")
+	private static void staticMethod12() {
+
+		System.out.println("staticMethod1 invoked.");
+		staticMethod12Invoked = true;
+	}
+
+	/***************************************************************************
+     *
+     **************************************************************************/
+	public boolean method1Invoked = false;
+	public boolean method12Invoked = false;
+	public boolean eventInvoked = false;
+	public boolean event2Invoked = false;
+	public static boolean staticMethod1Invoked = false;
+	public static boolean staticMethod12Invoked = false;
+	public String parameter1 = null;
+	public int parameter2 = 0;
+	public static String staticParameter1 = null;
+	public static int staticParameter2 = 0;
 }
