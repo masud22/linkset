@@ -32,7 +32,7 @@ import org.junit.Test;
  * 
  * @author Łukasz Bownik (lukasz.bownik@gmail.com)
  ******************************************************************************/
-public class TestClass {
+public class TestDefaultListenerManager {
 
     /***************************************************************************
      *
