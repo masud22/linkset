@@ -28,7 +28,6 @@ import org.junit.Test;
 import com.example.Event;
 import com.example.Event2;
 import com.example.HandlerTestClass1;
-import com.example.HandlerTestClass2;
 
 /*******************************************************************************
  * The test class
