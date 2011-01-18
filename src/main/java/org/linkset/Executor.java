@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  ******************************************************************************/
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-@interface Executor {
+public @interface Executor {
 
 	/***************************************************************************
 	 * Command class
