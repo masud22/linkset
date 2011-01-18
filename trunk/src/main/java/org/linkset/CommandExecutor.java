@@ -29,7 +29,7 @@ import java.util.HashMap;
  * 
  * @author Łukasz Bownik
  ******************************************************************************/
-final class CommandExecutor {
+public final class CommandExecutor {
 
 	/***************************************************************************
 	 * A constructor

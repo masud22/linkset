@@ -29,6 +29,6 @@ import java.io.Serializable;
  * 
  ******************************************************************************/
 @SuppressWarnings("serial")
-public class Null implements Serializable {
+public final class Null implements Serializable {
 
 }
