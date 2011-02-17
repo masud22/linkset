@@ -22,8 +22,6 @@ package org.linkset;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 /*******************************************************************************
@@ -31,64 +29,19 @@ import java.util.Map;
  * 
  * @author Łukasz Bownik
  ******************************************************************************/
-final class Handler implements InvocationHandler {
+final class MultiHandler implements InvocationHandler {
 
 	/***************************************************************************
 	 *
 	 **************************************************************************/
-	Handler(final Class<?> iCls, final Object target) {
+	MultiHandler(final Object target, final Map<Method, Method> map) {
 
-		if (target == null) {
-			throw new NullPointerException("Null target.");
-		}
-
-		if (iCls == null) {
-			throw new NullPointerException("Null interface class object.");
-
-		}
 		this.target = target;
-
-		System.out.println("Interface: " + iCls.getName());
-		System.out.println("Class: " + target.getClass().getName());
-		initMap(iCls);
+		this.map = map;
 	}
 
 	/***************************************************************************
-	 *
-	 **************************************************************************/
-	private void initMap(final Class<?> iCls) {
-
-		for (final Method interfaceMethod : iCls.getDeclaredMethods()) {
-			for (final Method targetMethod : this.target.getClass()
-					.getDeclaredMethods()) {
-				if (match(interfaceMethod, targetMethod)) {
-					this.map.put(interfaceMethod, targetMethod);
-				}
-			}
-		}
-		// no methods found
-		if (this.map.isEmpty()) {
-			throw new IllegalArgumentException("Object of class "
-					+ this.target.getClass().getName()
-					+ " is not assignable to interface " + iCls.getName());
-		}
-	}
-
-	/***************************************************************************
-	 *
-	 **************************************************************************/
-	private static boolean match(final Method method1, final Method method2) {
-
-		System.out.println("Mathing " + method1.toGenericString() + " and "
-				+ method2.toGenericString());
-		return method1.getName().equals(method2.getName())
-				&& method1.getReturnType().equals(method2.getReturnType())
-				&& Arrays.equals(method1.getParameterTypes(),
-						method2.getParameterTypes());
-	}
-
-	/***************************************************************************
-	 *
+	 * @see InvocationHandler#invoke(Object, Method, Object[])
 	 **************************************************************************/
 	public Object invoke(final Object proxy, final Method method,
 			final Object[] args) throws Throwable {
@@ -101,5 +54,5 @@ final class Handler implements InvocationHandler {
 	 *
 	 **************************************************************************/
 	private final Object target;
-	private final Map<Method, Method> map = new HashMap<Method, Method>();
+	private final Map<Method, Method> map;
 }
