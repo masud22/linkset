@@ -53,7 +53,7 @@ public final class SimpleEventBus implements EventBus {
 	}
 
 	/***************************************************************************
-	 * @see EventBus#removeAllObject)
+	 * @see EventBus#removeAll(Object)
 	 **************************************************************************/
 	public void removeAll(final Object target) {
 

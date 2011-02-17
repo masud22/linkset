@@ -33,8 +33,6 @@ public interface ListenerManager {
      * @param target
      *            a target object or class
      * @param methodId
-     *            a method annotation identifier
-     * @param methodId
      *            an id of a handler method
      * @throws NullPointerException
      *             id methodId == null or target == null
