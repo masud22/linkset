@@ -29,7 +29,7 @@ import java.util.Map;
 /*******************************************************************************
  * A dynamic proxy generator.
  * 
- * @author Łukasz Bownik
+ * @author Lukasz Bownik
  ******************************************************************************/
 public final class DProxy {
 

@@ -48,7 +48,7 @@ public final class MultiThreadedEventBus implements EventBus {
 	}
 
 	/***************************************************************************
-	 * @see EventBus#addHandler(Class, Object, String)
+	 * @see EventBus#add(Class, Object, String)
 	 **************************************************************************/
 	public void add(final Class<?> eventType, final Object target,
 			final String methodId) {
@@ -58,7 +58,7 @@ public final class MultiThreadedEventBus implements EventBus {
 	}
 
 	/***************************************************************************
-	 * @see EventBus#removeHandler(Class, Object, String)
+	 * @see EventBus#remove(Class, Object, String)
 	 **************************************************************************/
 	public void remove(final Class<?> eventType, final Object target,
 			final String methodId) {
@@ -68,7 +68,7 @@ public final class MultiThreadedEventBus implements EventBus {
 	}
 
 	/***************************************************************************
-	 * @see EventBus#removeAllHandlers(Object)
+	 * @see EventBus#removeAll(Object)
 	 **************************************************************************/
 	public void removeAll(final Object target) {
 
