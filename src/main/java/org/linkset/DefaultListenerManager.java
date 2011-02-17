@@ -34,7 +34,7 @@ public final class DefaultListenerManager implements ListenerManager {
 	 * A default constructor. This construcotr is equivalnet to
 	 * DefaultListenerManager(null)
 	 * 
-	 * @see DefaultListenerManager#DefaultListenerManager(java.lang.Class<?>[])
+	 * @see #DefaultListenerManager(java.lang.Class<?>[])
 	 **************************************************************************/
 	public DefaultListenerManager() {
 
@@ -142,7 +142,7 @@ public final class DefaultListenerManager implements ListenerManager {
 	/***************************************************************************
 	 * This method is equivalent to invokeAll(null)
 	 * 
-	 * @see ListenerManager#invokeAll(java.lang.Object[])
+	 * @see #invokeAll(java.lang.Object[])
 	 **************************************************************************/
 	public void invokeAll() throws InvocationTargetException,
 			ExceptionInInitializerError {
