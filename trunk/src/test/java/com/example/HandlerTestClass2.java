@@ -32,7 +32,7 @@ public final class HandlerTestClass2 {
     /***************************************************************************
      *
      **************************************************************************/
-    @HandlerMethod(id = "method2")
+    @MethodId("method2")
     private void method2() {
 
         System.out.println("Method2 invoked.");
@@ -40,7 +40,7 @@ public final class HandlerTestClass2 {
     /***************************************************************************
      *
      **************************************************************************/
-    @HandlerMethod(id = "staticMethod2")
+    @MethodId("staticMethod2")
     private static void staticMethod2() {
 
         System.out.println("staticMethod2 invoked.");

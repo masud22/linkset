@@ -32,10 +32,10 @@ import java.lang.annotation.Target;
  ******************************************************************************/
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface HandlerMethod {
+public @interface MethodId {
 
 	/***************************************************************************
 	 * An identifier of a handler. Must be unique within a class declaration.
 	 **************************************************************************/
-	public String id();
+	public String value();
 }

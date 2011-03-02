@@ -43,7 +43,7 @@ public final class CommandExecutor {
 
 		for (final Method method : target.getClass().getDeclaredMethods()) {
 
-			final Executor executor = method.getAnnotation(Executor.class);
+			final ExecutorOf executor = method.getAnnotation(ExecutorOf.class);
 			if (executor != null) {
 
 				final Class<?> parameters[] = method.getParameterTypes();
@@ -51,10 +51,10 @@ public final class CommandExecutor {
 					throw new RuntimeException("Executor " + method
 							+ " must have only 1 parameter");
 				}
-				if (!parameters[0].equals(executor.cmdClass())) {
+				if (!parameters[0].equals(executor.value())) {
 					throw new RuntimeException("Executor " + method
 							+ " must have a parameter fo type: "
-							+ executor.cmdClass());
+							+ executor.value());
 				}
 
 				if (method.getReturnType().equals(Void.class)) {
@@ -63,12 +63,12 @@ public final class CommandExecutor {
 				}
 
 				method.setAccessible(true);
-				final Method prevoius = this.map.put(executor.cmdClass(),
+				final Method prevoius = this.map.put(executor.value(),
 						method);
 
 				if (prevoius != null) {
 					throw new RuntimeException("Multiple executors found for: "
-							+ executor.cmdClass());
+							+ executor.value());
 				}
 			}
 		}
