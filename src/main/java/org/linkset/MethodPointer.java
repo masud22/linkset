@@ -153,9 +153,9 @@ final public class MethodPointer {
 
 		for (final Method method : cls.getDeclaredMethods()) {
 
-			final HandlerMethod handler = method
-					.getAnnotation(HandlerMethod.class);
-			if (handler != null && handler.id().equals(methodId)) {
+			final MethodId handler = method
+					.getAnnotation(MethodId.class);
+			if (handler != null && handler.value().equals(methodId)) {
 				method.setAccessible(true);
 				return method;
 			}

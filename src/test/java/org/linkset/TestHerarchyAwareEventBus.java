@@ -77,7 +77,7 @@ public class TestHerarchyAwareEventBus {
 	/***************************************************************************
     *
     **************************************************************************/
-	@HandlerMethod(id = "eventHandler")
+	@MethodId("eventHandler")
 	private void eventHandler(final Event evet) {
 
 		this.eventHandlerInvoked = true;
@@ -86,7 +86,7 @@ public class TestHerarchyAwareEventBus {
 	/***************************************************************************
     *
     **************************************************************************/
-	@HandlerMethod(id = "subEventHandler")
+	@MethodId("subEventHandler")
 	private void subEventHandler(final SubEvent evet) {
 
 		this.subEventHandlerInvoked = true;

@@ -32,7 +32,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
      *
      **************************************************************************/
-	@HandlerMethod(id = "method1")
+	@MethodId("method1")
 	private void method1() {
 
 		System.out.println("Method1 invoked.");
@@ -42,7 +42,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
      *
      **************************************************************************/
-	@HandlerMethod(id = "method12")
+	@MethodId("method12")
 	private void method12() {
 
 		System.out.println("Method1 invoked.");
@@ -52,7 +52,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
      *
      **************************************************************************/
-	@HandlerMethod(id = "returnValueMethod")
+	@MethodId("returnValueMethod")
 	private String returnValueMethod() {
 
 		return "123";
@@ -61,7 +61,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
      *
      **************************************************************************/
-	@HandlerMethod(id = "parameterMethod")
+	@MethodId("parameterMethod")
 	private void parameterMethod(final String param1, final int param2) {
 
 		System.out.println("parameterMethod invoked.");
@@ -72,7 +72,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
     *
     **************************************************************************/
-	@HandlerMethod(id = "eventMethod")
+	@MethodId("eventMethod")
 	private void eventMethod(final Event event) {
 
 		System.out.println("eventMethod invoked.");
@@ -82,7 +82,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
    *
    **************************************************************************/
-	@HandlerMethod(id = "event2Method")
+	@MethodId("event2Method")
 	private void event2Method(final Event2 event) {
 
 		System.out.println("event2Method invoked.");
@@ -92,7 +92,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
      *
      **************************************************************************/
-	@HandlerMethod(id = "staticParameterMethod")
+	@MethodId("staticParameterMethod")
 	private static void staticParameterMethod(final String param1,
 			final int param2) {
 
@@ -104,7 +104,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
      *
      **************************************************************************/
-	@HandlerMethod(id = "staticMethod1")
+	@MethodId("staticMethod1")
 	private static void staticMethod1() {
 
 		System.out.println("staticMethod1 invoked.");
@@ -114,7 +114,7 @@ public final class HandlerTestClass1 {
 	/***************************************************************************
      *
      **************************************************************************/
-	@HandlerMethod(id = "staticMethod12")
+	@MethodId("staticMethod12")
 	private static void staticMethod12() {
 
 		System.out.println("staticMethod1 invoked.");
