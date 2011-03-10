@@ -22,7 +22,9 @@ package org.linkset;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /*******************************************************************************
  * A class dispatching commands.
@@ -63,8 +65,7 @@ public final class CommandExecutor {
 				}
 
 				method.setAccessible(true);
-				final Method prevoius = this.map.put(executor.value(),
-						method);
+				final Method prevoius = this.map.put(executor.value(), method);
 
 				if (prevoius != null) {
 					throw new RuntimeException("Multiple executors found for: "
@@ -78,12 +79,33 @@ public final class CommandExecutor {
 	 * A method that executes a supplied command.
 	 * 
 	 * @param command
+	 *            a command to execute - if it implements the java.util.List
+	 *            interface than a bach bommand is assumend
+	 * @return return value of a command execution method, or a list containing
+	 *         results of bach commands in the same order
+	 * @throws a
+	 *             throwable thrown by command execution method.
+	 **************************************************************************/
+	@SuppressWarnings("unchecked")
+	public Object execute(final Object command) throws Throwable {
+
+		if (command instanceof List) {
+			return executeBatch((List<Object>) command);
+		} else {
+			return executeSingle(command);
+		}
+	}
+
+	/***************************************************************************
+	 * A method that executes a supplied command.
+	 * 
+	 * @param command
 	 *            a command to execute
 	 * @return return value of a command execution method.
 	 * @throws a
 	 *             throwable thrown by command execution method.
 	 **************************************************************************/
-	public Object execute(final Object command) throws Throwable {
+	public Object executeSingle(final Object command) throws Throwable {
 
 		final Method method = this.map.get(command.getClass());
 		if (method != null) {
@@ -97,6 +119,27 @@ public final class CommandExecutor {
 			throw new RuntimeException("No executor found for: "
 					+ command.getClass());
 		}
+	}
+
+	/***************************************************************************
+	 * A method that executes a list of supplied commands
+	 * 
+	 * @param commands
+	 *            a list of commands to execute
+	 * @return a list of return values of commands execution methods.
+	 * @throws a
+	 *             throwable thrown by command execution method.
+	 **************************************************************************/
+	public List<Object> executeBatch(final List<Object> commands)
+			throws Throwable {
+
+		final ArrayList<Object> results = new ArrayList<Object>(commands.size());
+
+		for (final Object command : commands) {
+			results.add(executeSingle(command));
+		}
+
+		return results;
 	}
 
 	/***************************************************************************
