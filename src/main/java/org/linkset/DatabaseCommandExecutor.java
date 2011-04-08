@@ -22,9 +22,12 @@ package org.linkset;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 /*******************************************************************************
  * A class dispatching commands. If data surce or connection is passed to a
@@ -32,17 +35,38 @@ import java.util.List;
  * 
  * @author Łukasz Bownik
  ******************************************************************************/
-public final class CommandExecutor implements ICommandExecutor {
+public final class DatabaseCommandExecutor implements ICommandExecutor {
 
 	/***************************************************************************
 	 * A constructor
 	 * 
 	 * @param target
 	 *            an objects that defines command execution methods.
+	 * @param connection
+	 *            a jdbc connection
 	 **************************************************************************/
-	public CommandExecutor(final Object target) {
+	public DatabaseCommandExecutor(final Object target,
+			final Connection connection) {
+
+		this(target, new DummyDataSource(connection));
+	}
+
+	/***************************************************************************
+	 * A constructor
+	 * 
+	 * @param target
+	 *            an objects that defines command execution methods.
+	 * @param dataSource
+	 *            a jdbc data source
+	 **************************************************************************/
+	public DatabaseCommandExecutor(final Object target,
+			final DataSource dataSource) {
 
 		this.target = target;
+		this.dataSource = dataSource;
+		if (dataSource == null) {
+			throw new NullPointerException("Null data source.");
+		}
 
 		for (final Method method : target.getClass().getDeclaredMethods()) {
 
@@ -74,20 +98,23 @@ public final class CommandExecutor implements ICommandExecutor {
 			final Class<?> cmdCls) {
 
 		final Class<?> parameters[] = method.getParameterTypes();
-		if (parameters.length != 1) {
+		if (parameters.length != 2) {
 			throw new RuntimeException("Executor " + method
-					+ " must have only 1 parameter");
+					+ " must have exactly 2 parameters");
 		}
 		if (!parameters[0].equals(cmdCls)) {
 			throw new RuntimeException("Executor " + method
-					+ " must have a parameter of type: " + cmdCls);
+					+ " must have the first parameter of type: " + cmdCls);
 		}
-
+		if (!parameters[1].equals(Connection.class)) {
+			throw new RuntimeException("Executor " + method
+					+ " must have the second parameter of type: "
+					+ "java.sql.Connection");
+		}
 		if (method.getReturnType().equals(Void.class)) {
 			throw new RuntimeException("Executor " + method
 					+ " must return null of type 'Null'.");
 		}
-
 	}
 
 	/***************************************************************************
@@ -104,10 +131,19 @@ public final class CommandExecutor implements ICommandExecutor {
 	@SuppressWarnings("unchecked")
 	public Object execute(final Object command) throws Throwable {
 
-		if (command instanceof List) {
-			return executeBatch((List<Object>) command);
-		} else {
-			return executeSingle(command);
+		final Connection connection = this.dataSource.getConnection();
+		try {
+			Object returnValue;
+			if (command instanceof List) {
+				returnValue = executeBatch((List<Object>) command, connection);
+			} else {
+				returnValue = executeSingle(command, connection);
+			}
+			connection.commit();
+			return returnValue;
+		} catch (final Exception e) {
+			connection.rollback();
+			throw e;
 		}
 	}
 
@@ -116,16 +152,20 @@ public final class CommandExecutor implements ICommandExecutor {
 	 * 
 	 * @param command
 	 *            a command to execute
+	 * @param connection
+	 *            a database connection
 	 * @return return value of a command execution method.
 	 * @throws a
 	 *             throwable thrown by command execution method.
 	 **************************************************************************/
-	private Object executeSingle(final Object command) throws Throwable {
+	private Object executeSingle(final Object command,
+			final Connection connection) throws Throwable {
 
 		final Method method = this.map.get(command.getClass());
 		if (method != null) {
 			try {
-				final Object result = method.invoke(this.target, command);
+				final Object result = method.invoke(this.target, command,
+						connection);
 				return result;
 			} catch (final InvocationTargetException e) {
 				throw e.getTargetException();
@@ -141,17 +181,19 @@ public final class CommandExecutor implements ICommandExecutor {
 	 * 
 	 * @param commands
 	 *            a list of commands to execute
+	 * @param connection
+	 *            a database connection
 	 * @return a list of return values of commands execution methods.
 	 * @throws a
 	 *             throwable thrown by command execution method.
 	 **************************************************************************/
-	private List<Object> executeBatch(final List<Object> commands)
-			throws Throwable {
+	private List<Object> executeBatch(final List<Object> commands,
+			final Connection connection) throws Throwable {
 
 		final ArrayList<Object> results = new ArrayList<Object>(commands.size());
 
 		for (final Object command : commands) {
-			results.add(executeSingle(command));
+			results.add(executeSingle(command, connection));
 		}
 
 		return results;
@@ -162,4 +204,5 @@ public final class CommandExecutor implements ICommandExecutor {
 	 **************************************************************************/
 	private final HashMap<Class<?>, Method> map = new HashMap<Class<?>, Method>();
 	private final Object target;
+	private final DataSource dataSource;
 }

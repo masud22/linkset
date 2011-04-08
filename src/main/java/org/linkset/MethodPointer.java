@@ -119,8 +119,8 @@ final public class MethodPointer {
 	 * @throws InvocationTargetException
 	 *             if the underlying method throws an exception.
 	 **************************************************************************/
-	public Object invoke(final Object... args) throws InvocationTargetException,
-			ExceptionInInitializerError {
+	public Object invoke(final Object... args)
+			throws InvocationTargetException, ExceptionInInitializerError {
 
 		try {
 			return this.method.invoke(this.target, args);
@@ -149,13 +149,23 @@ final public class MethodPointer {
 	 * 
 	 * @param cls
 	 **************************************************************************/
+	@SuppressWarnings("deprecation")
 	private static Method getMethod(final Class<?> cls, final String methodId) {
 
 		for (final Method method : cls.getDeclaredMethods()) {
 
-			final MethodId handler = method
-					.getAnnotation(MethodId.class);
+			final MethodId handler = method.getAnnotation(MethodId.class);
 			if (handler != null && handler.value().equals(methodId)) {
+				method.setAccessible(true);
+				return method;
+			}
+		}
+		// backward compatibility code
+		for (final Method method : cls.getDeclaredMethods()) {
+
+			final HandlerMethod oldHandler = method
+					.getAnnotation(HandlerMethod.class);
+			if (oldHandler != null && oldHandler.id().equals(methodId)) {
 				method.setAccessible(true);
 				return method;
 			}
