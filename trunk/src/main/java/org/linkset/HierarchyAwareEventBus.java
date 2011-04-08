@@ -114,7 +114,7 @@ public final class HierarchyAwareEventBus implements EventBus {
 	}
 
 	/***************************************************************************
-	 * Getr a listener manager of a givent event type
+	 * Get a listener manager of a givent event type
 	 * 
 	 * @param eventType
 	 *            type of event
