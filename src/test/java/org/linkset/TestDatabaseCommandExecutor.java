@@ -20,13 +20,16 @@
 // -----------------------------------------------------------------------------
 package org.linkset;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,9 +45,9 @@ public class TestDatabaseCommandExecutor {
     **************************************************************************/
 	@Before
 	public void setUp() throws Exception {
-		Class.forName("org.hsqldb.jdbc.JDBCDriver" );
+		Class.forName("org.hsqldb.jdbcDriver");
 		c = DriverManager.getConnection("jdbc:hsqldb:mem:mymemdb", "SA", "");
-		c.createStatement().execute("create table t1(char(10) name)");
+		c.createStatement().execute("create table t1(name char(10))");
 		c.commit();
 		c.setAutoCommit(false);
 	}
@@ -61,12 +64,15 @@ public class TestDatabaseCommandExecutor {
 		final List<Object> commands = new ArrayList<Object>();
 		commands.add("string");
 		commands.add(new Integer(1));
-		executor.execute(commands);
-
+		try {
+			executor.execute(commands);
+			fail();
+		} catch (final Exception e) {
+			assertTrue(true);
+		}
 		ResultSet rs = c.createStatement().executeQuery(
-				"select count * from t1");
-		rs.next();
-		assertEquals(0, rs.getInt(1));
+				"select * from t1");
+		assertEquals(false, rs.next());
 	}
 
 	/***************************************************************************
